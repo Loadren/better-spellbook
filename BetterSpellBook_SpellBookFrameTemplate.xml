@@ -1,0 +1,814 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <Script file="BetterSpellBook_PlayerSpellBookMixin.lua" />
+    <Script file="BetterSpellBook_PetSpellBookMixin.lua" />
+    <Script file="BetterSpellBook_SpellBookFrameTemplate.lua" />
+
+    <Frame name="BetterSpellBookFrameTemplate" mixin="BetterSpellBookFrameMixin" toplevel="true"
+        movable="true" enableMouse="true" hidden="true"
+        parent="UIParent" frameStrata="MEDIUM"
+        inherits="PortraitFrameTemplate, TabSystemOwnerTemplate">
+        <Size>
+            <AbsDimension x="550" y="525" />
+        </Size>
+        <Frames>
+            <Frame parentKey="CategoryTabSystem" inherits="TabSystemTemplate">
+                <KeyValues>
+                    <KeyValue key="minTabWidth" value="100" type="number" />
+                    <KeyValue key="maxTabWidth" value="150" type="number" />
+                    <KeyValue key="tabSelectSound" value="SOUNDKIT.IG_SPELLBOOK_OPEN" type="global" />
+                </KeyValues>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" x="10" y="-30" />
+                </Anchors>
+            </Frame>
+            <Frame parentKey="PlayerSpellBook" mixin="BetterPlayerSpellBookMixin">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="BetterSpellBookFrameTemplate"
+                        relativePoint="TOPLEFT" />
+                    <Anchor point="BOTTOMRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                        relativePoint="BOTTOMRIGHT" />
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND" textureSubLevel="1">
+                        <Texture parentKey="TopBar" atlas="spellbook-background-evergreen-header">
+                            <Size x="550" y="60" />
+                            <Anchors>
+                                <Anchor point="TOPLEFT" y="-10" />
+                            </Anchors>
+                        </Texture>
+                        <Texture parentKey="BookBG" atlas="spellbook-background-evergreen-left"
+                            parentArray="maximizedArt">
+                            <Size>
+                                <AbsDimension x="550" y="465" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" y="-60" />
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+
+                    <Layer level="BACKGROUND" textureSubLevel="2">
+                        <Texture parentKey="Bookmark" atlas="spellbook-background-evergreen-ribbon"
+                            parentArray="maximizedArt">
+                            <Size>
+                                <AbsDimension x="80" y="440" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                    relativePoint="TOPRIGHT" />
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Frame parentKey="HidePassivesCheckButton" inherits="ResizeCheckButtonTemplate"
+                        mixin="NonPassiveCheckMixin">
+                        <KeyValues>
+                            <KeyValue key="labelText" value="SPELLBOOK_FILTER_PASSIVES"
+                                type="global" />
+                            <KeyValue key="labelFont" value="GameFontNormal" type="string" />
+                            <KeyValue key="disabledLabelFont" value="GameFontNormal"
+                                type="string" />
+                        </KeyValues>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="TOPRIGHT" x="-80" y="-30" />
+                        </Anchors>
+                    </Frame>
+                    <Frame parentKey="SpellButtons">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="TOPLEFT" />
+                            <Anchor point="BOTTOMRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="BOTTOMRIGHT" />
+                        </Anchors>
+                        <Frames>
+                            <CheckButton parentKey="BetterSpellButton1"
+                                inherits="BetterSpellButtonTemplate"
+                                id="1">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="100" y="-80" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton2"
+                                inherits="BetterSpellButtonTemplate"
+                                id="7">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton1">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton3"
+                                inherits="BetterSpellButtonTemplate"
+                                id="2">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton1"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton4"
+                                inherits="BetterSpellButtonTemplate"
+                                id="8">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton3">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton5"
+                                inherits="BetterSpellButtonTemplate"
+                                id="3">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton3"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton6"
+                                inherits="BetterSpellButtonTemplate"
+                                id="9">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton5">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton7"
+                                inherits="BetterSpellButtonTemplate"
+                                id="4">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton5"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton8"
+                                inherits="BetterSpellButtonTemplate"
+                                id="10">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton7">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton9"
+                                inherits="BetterSpellButtonTemplate"
+                                id="5">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton7"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton10"
+                                inherits="BetterSpellButtonTemplate"
+                                id="11">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton9">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton11"
+                                inherits="BetterSpellButtonTemplate"
+                                id="6">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton9"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton12"
+                                inherits="BetterSpellButtonTemplate"
+                                id="12">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellButton11">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                        </Frames>
+                    </Frame>
+                    <Frame parentKey="Navigation">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="TOPLEFT" />
+                            <Anchor point="BOTTOMRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="BOTTOMRIGHT" />
+                        </Anchors>
+                        <Layers>
+                            <Layer level="BACKGROUND" textureSubLevel="3">
+                                <FontString name="BetterSpellBookPageText" parentKey="pageText"
+                                    inherits="GameFontNormal"
+                                    text="PAGE">
+                                    <Size>
+                                        <AbsDimension x="102" y="0" />
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="BOTTOMRIGHT">
+                                            <Offset>
+                                                <AbsDimension x="-80" y="20" />
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Frames>
+                            <Button name="BetterSpellBookPrevPageButton"
+                                parentKey="prevPageButton"
+                                mixin="BetterSpellBookPrevPageButtonMixin">
+                                <Size>
+                                    <AbsDimension x="32" y="32" />
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="BOTTOMRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="-55" y="10" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                    <OnClick method="OnClick" />
+                                </Scripts>
+                                <NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up" />
+                                <PushedTexture
+                                    file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down" />
+                                <DisabledTexture
+                                    file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled" />
+                                <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight"
+                                    alphaMode="ADD" />
+                            </Button>
+                            <Button name="BetterSpellBookNextPageButton"
+                                parentKey="nextPageButton"
+                                mixin="BetterSpellBookNextPageButtonMixin">
+                                <Size>
+                                    <AbsDimension x="32" y="32" />
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="BOTTOMRIGHT"
+                                        relativeKey="$parent.BetterSpellBookPrevPageButton"
+                                        relativePoint="BOTTOMRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="-20" y="10" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                    <OnClick method="OnClick" />
+                                </Scripts>
+                                <NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up" />
+                                <PushedTexture
+                                    file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down" />
+                                <DisabledTexture
+                                    file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled" />
+                                <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight"
+                                    alphaMode="ADD" />
+                            </Button>
+                        </Frames>
+
+                    </Frame>
+                    <Frame parentKey="SkillLine">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="TOPLEFT" />
+                            <Anchor point="BOTTOMRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="BOTTOMRIGHT" />
+                        </Anchors>
+                        <Frames>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab1"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="1">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-65" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab2"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="2">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab1"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab3"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="3">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab2"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab4"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="4">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab3"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab5"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="5">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab4"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab6"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="6">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab5"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab7"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="7">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab6"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab8"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="8">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab7"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                        </Frames>
+                    </Frame>
+                </Frames>
+                <Scripts>
+                    <OnLoad method="OnLoad" />
+                </Scripts>
+            </Frame>
+            <Frame parentKey="PetSpellBook" mixin="BetterPetSpellBookMixin" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="BetterSpellBookFrameTemplate"
+                        relativePoint="TOPLEFT" />
+                    <Anchor point="BOTTOMRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                        relativePoint="BOTTOMRIGHT" />
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND" textureSubLevel="1">
+                        <Texture parentKey="TopBar" atlas="spellbook-background-evergreen-header">
+                            <Size x="550" y="60" />
+                            <Anchors>
+                                <Anchor point="TOPLEFT" y="-10" />
+                            </Anchors>
+                        </Texture>
+                        <Texture parentKey="BookBG" atlas="spellbook-background-evergreen-left"
+                            parentArray="maximizedArt">
+                            <Size>
+                                <AbsDimension x="550" y="465" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" y="-60" />
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+
+                    <Layer level="BACKGROUND" textureSubLevel="2">
+                        <Texture parentKey="Bookmark" atlas="spellbook-background-evergreen-ribbon"
+                            parentArray="maximizedArt">
+                            <Size>
+                                <AbsDimension x="80" y="440" />
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                    relativePoint="TOPRIGHT" />
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Frame parentKey="HidePassivesCheckButton" inherits="ResizeCheckButtonTemplate"
+                        mixin="NonPassiveCheckMixin">
+                        <KeyValues>
+                            <KeyValue key="labelText" value="SPELLBOOK_FILTER_PASSIVES"
+                                type="global" />
+                            <KeyValue key="labelFont" value="GameFontNormal" type="string" />
+                            <KeyValue key="disabledLabelFont" value="GameFontNormal"
+                                type="string" />
+                        </KeyValues>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="TOPRIGHT" x="-80" y="-30" />
+                        </Anchors>
+                    </Frame>
+                    <Frame parentKey="SpellButtons">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="TOPLEFT" />
+                            <Anchor point="BOTTOMRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="BOTTOMRIGHT" />
+                        </Anchors>
+                        <Frames>
+                            <CheckButton parentKey="BetterSpellButton1"
+                                inherits="BetterSpellButtonTemplate"
+                                id="1">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="100" y="-80" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton2"
+                                inherits="BetterSpellButtonTemplate"
+                                id="7">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton1">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton3"
+                                inherits="BetterSpellButtonTemplate"
+                                id="2">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton1"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton4"
+                                inherits="BetterSpellButtonTemplate"
+                                id="8">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton3">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton5"
+                                inherits="BetterSpellButtonTemplate"
+                                id="3">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton3"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton6"
+                                inherits="BetterSpellButtonTemplate"
+                                id="9">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton5">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton7"
+                                inherits="BetterSpellButtonTemplate"
+                                id="4">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton5"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton8"
+                                inherits="BetterSpellButtonTemplate"
+                                id="10">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton7">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton9"
+                                inherits="BetterSpellButtonTemplate"
+                                id="5">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton7"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton10"
+                                inherits="BetterSpellButtonTemplate"
+                                id="11">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton9">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton11"
+                                inherits="BetterSpellButtonTemplate"
+                                id="6">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeKey="$parent.BetterSpellButton9"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-29" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellButton12"
+                                inherits="BetterSpellButtonTemplate"
+                                id="12">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellButton11">
+                                        <Offset>
+                                            <AbsDimension x="225" y="0" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                        </Frames>
+                    </Frame>
+                    <Frame parentKey="Navigation">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="TOPLEFT" />
+                            <Anchor point="BOTTOMRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="BOTTOMRIGHT" />
+                        </Anchors>
+                        <Layers>
+                            <Layer level="BACKGROUND" textureSubLevel="3">
+                                <FontString name="BetterSpellBookPageText" parentKey="pageText"
+                                    inherits="GameFontNormal"
+                                    text="PAGE">
+                                    <Size>
+                                        <AbsDimension x="102" y="0" />
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="BOTTOMRIGHT">
+                                            <Offset>
+                                                <AbsDimension x="-80" y="20" />
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Frames>
+                            <Button name="BetterSpellBookPrevPageButton"
+                                parentKey="prevPageButton"
+                                mixin="BetterSpellBookPrevPageButtonMixin">
+                                <Size>
+                                    <AbsDimension x="32" y="32" />
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="BOTTOMRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="-55" y="10" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                    <OnClick method="OnClick" />
+                                </Scripts>
+                                <NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up" />
+                                <PushedTexture
+                                    file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Down" />
+                                <DisabledTexture
+                                    file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled" />
+                                <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight"
+                                    alphaMode="ADD" />
+                            </Button>
+                            <Button name="BetterSpellBookNextPageButton"
+                                parentKey="nextPageButton"
+                                mixin="BetterSpellBookNextPageButtonMixin">
+                                <Size>
+                                    <AbsDimension x="32" y="32" />
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="BOTTOMRIGHT"
+                                        relativeKey="$parent.BetterSpellBookPrevPageButton"
+                                        relativePoint="BOTTOMRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="-20" y="10" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                    <OnClick method="OnClick" />
+                                </Scripts>
+                                <NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up" />
+                                <PushedTexture
+                                    file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down" />
+                                <DisabledTexture
+                                    file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled" />
+                                <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight"
+                                    alphaMode="ADD" />
+                            </Button>
+                        </Frames>
+
+                    </Frame>
+                    <Frame parentKey="SkillLine">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="TOPLEFT" />
+                            <Anchor point="BOTTOMRIGHT" relativeTo="BetterSpellBookFrameTemplate"
+                                relativePoint="BOTTOMRIGHT" />
+                        </Anchors>
+                        <Frames>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab1"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="1">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-65" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab2"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="2">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab1"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab3"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="3">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab2"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab4"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="4">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab3"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab5"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="5">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab4"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab6"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="6">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab5"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab7"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="7">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab6"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                            <CheckButton parentKey="BetterSpellBookSkillLineTab8"
+                                inherits="BetterSpellBookSkillLineTabTemplate" id="8">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"
+                                        relativeKey="$parent.BetterSpellBookSkillLineTab7"
+                                        relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-17" />
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </CheckButton>
+                        </Frames>
+                    </Frame>
+                </Frames>
+                <Scripts>
+                    <OnLoad method="OnLoad" />
+                </Scripts>
+            </Frame>
+        </Frames>
+        <Scripts>
+            <OnLoad method="OnLoad" />
+            <OnShow method="OnShow" />
+            <OnHide method="OnHide" />
+            <OnEvent method="OnEvent" />
+        </Scripts>
+    </Frame>
+
+</Ui>

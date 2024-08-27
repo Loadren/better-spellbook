@@ -1,0 +1,15 @@
+## Interface: 110002
+## Title: Better SpellBook
+## Notes: Provide a clean, updated to today's graphics spellbook experience, but smaller!
+## Author: Loadren
+## Version: 0.1.0
+## DefaultState: Enabled
+## SavedVariables: BetterSpellBookSaved
+## X-Curse-Project-ID: 1087335
+## IconTexture: 133741
+
+utils.lua
+BetterSpellBook_PopulateSpells.lua
+BetterSpelLBook_SkillLineTabTemplate.xml
+BetterSpellBook_SpellButtonTemplate.xml
+BetterSpellBook_SpellBookFrameTemplate.xml

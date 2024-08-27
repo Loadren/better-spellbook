@@ -1,0 +1,159 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <Script file="BetterSpellBook_SpellButtonTemplate.lua" />
+    <Button name="BetterSpellButtonTemplate" virtual="true" mixin="BetterSpellButtonMixin"
+        inherits="SecureActionButtonTemplate">
+        <Size>
+            <AbsDimension x="37" y="37" />
+        </Size>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Background"
+                    file="Interface/HUD/UiActionBar2x/UI-HUD-ActionBar-IconFrame">
+                    <Size>
+                        <AbsDimension x="64" y="64" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="-3" y="3" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="TextBackground" file="Interface/Spellbook/Spellbook-Parts">
+                    <Size x="167" y="39" />
+                    <TexCoords left="0.3125" right="0.9648" top="0.3711" bottom="0.5234" />
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent.Background"
+                            relativePoint="TOPRIGHT" x="-30" y="-5" />
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="BORDER" textureSubLevel="1">
+                <Texture parentKey="IconTexture" setAllPoints="true" />
+                <FontString parentKey="SpellName" inherits="GameFontNormal" maxLines="3"
+                    justifyH="LEFT">
+                    <Size>
+                        <AbsDimension x="103" y="0" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="4" y="0" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="SubSpellName" inherits="SubSpellFont"
+                    justifyH="LEFT">
+                    <Size>
+                        <AbsDimension x="79" y="18" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeKey="$parent.SpellName"
+                            relativePoint="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="4" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture parentKey="AutoCastable" file="Interface/Buttons/UI-AutoCastableOverlay"
+                    hidden="true">
+                    <Size>
+                        <AbsDimension x="60" y="60" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="SlotFrame" atlas="spellbook-item-iconframe">
+                    <Size x="57" y="55" />
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="-5" y="-3" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="SlotFrameInactive" atlas="spellbook-item-iconframe-inactive">
+                    <Size x="57" y="55" />
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="-5" y="-2" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="SlotFrameShine" file="Interface/SpellBook/SpellbookElementsIconSheenMask" 
+                hidden="true" alphaMode="ADD">
+                    <Size x="57" y="55" />
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="-5" y="-2" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                
+                <Texture parentKey="CustomShine" file="Interface/Cooldown/star4" hidden="true">
+                    <Size>
+                        <AbsDimension x="60" y="60" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER" />
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="1">
+                <Texture parentKey="FlyoutArrow" atlas="UI-HUD-ActionBar-Flyout" rotation="-90">
+                    <Size>
+                        <AbsDimension x="12" y="12" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT" relativeKey="$parent.Background" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-18" y="10" />
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Cooldown parentKey="Cooldown" inherits="CooldownFrameTemplate" />
+        </Frames>
+        <NormalTexture parentKey="NormalTexture" file="Interface/Buttons/UI-Quickslot2">
+            <Size>
+                <AbsDimension x="64" y="64" />
+            </Size>
+            <Anchors>
+                <Anchor point="CENTER">
+                    <Offset>
+                        <AbsDimension x="0" y="0" />
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </NormalTexture>
+        <PushedTexture file="Interface/Buttons/UI-Quickslot-Depress" />
+        <HighlightTexture parentKey="Highlight" file="Interface/Buttons/ButtonHilight-Square"
+            alphaMode="ADD" />
+        <Scripts>
+            <OnLoad method="OnLoad" />
+            <OnEnter method="OnEnter" />
+            <OnLeave method="OnLeave" />
+            <OnDragStart method="OnDrag" />
+			<OnReceiveDrag method="OnDrag" />
+        </Scripts>
+    </Button>
+</Ui>
