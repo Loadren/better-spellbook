@@ -1,8 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
     <Script file="BetterSpellBook_SpellButtonTemplate.lua" />
-    <Button name="BetterSpellButtonTemplate" virtual="true" mixin="BetterSpellButtonMixin"
-        inherits="SecureActionButtonTemplate">
+    <Button name="BetterSpellButtonTemplate" virtual="true" mixin="BetterSpellButtonMixin" inherits="SecureActionButtonTemplate" registerForClicks="AnyUp, AnyDown">
         <Size>
             <AbsDimension x="37" y="37" />
         </Size>
@@ -40,7 +39,7 @@
                     <Anchors>
                         <Anchor point="LEFT" relativePoint="RIGHT">
                             <Offset>
-                                <AbsDimension x="4" y="0" />
+                                <AbsDimension x="8" y="0" />
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -152,6 +151,7 @@
             <OnLoad method="OnLoad" />
             <OnEnter method="OnEnter" />
             <OnLeave method="OnLeave" />
+            <OnEvent method="OnEvent" />    
             <OnDragStart method="OnDrag" />
 			<OnReceiveDrag method="OnDrag" />
         </Scripts>

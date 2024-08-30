@@ -15,10 +15,16 @@ end
 
 function BetterSpellButtonMixin:OnLoad()
     -- Register events
-    self:RegisterEvent("SPELLS_CHANGED")
+    self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
 
     -- Register the button for drag events
     self:RegisterForDrag("LeftButton")
+end
+
+function BetterSpellButtonMixin:OnEvent(event, ...)
+    if event == "SPELL_UPDATE_COOLDOWN" then
+        self:UpdateCooldown()
+    end
 end
 
 function BetterSpellButtonMixin:OnEnter()
@@ -39,8 +45,9 @@ function BetterSpellButtonMixin:OnLeave()
     self.SlotFrameShine:Hide()
 end
 
-function BetterSpellButtonMixin:OnDrag()
 
+
+function BetterSpellButtonMixin:OnDrag()
     if self.isPetSpell then
         C_SpellBook.PickupSpellBookItem(self.spellInfo.newSpellBookIndex, Enum.SpellBookSpellBank.Pet)
     else
@@ -97,16 +104,17 @@ function BetterSpellButtonMixin:UpdateSpellInfo(spellInfo, isPetSpell)
 end
 
 function BetterSpellButtonMixin:UpdateCooldown()
+    if not self.spellID then
+        return
+    end
     -- Update the cooldown display for the spell button
     local spellCooldownInfo = C_Spell.GetSpellCooldown(self.spellID)
     if spellCooldownInfo then
-        CooldownFrame_Set(self.Cooldown, spellCooldownInfo.startTime, spellCooldownInfo.duration,
-        spellCooldownInfo.isEnabled)
+        self.Cooldown:SetCooldown(spellCooldownInfo.startTime, spellCooldownInfo.duration);
     end
 end
 
 function BetterSpellButtonMixin:UpdateSpellButtonVisuals(spellInfo)
-
     -- Desaturate the icon if the spell is not known
     if spellInfo.isKnown then
         self.IconTexture:SetDesaturated(false)

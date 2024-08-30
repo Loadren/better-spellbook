@@ -808,6 +808,8 @@
             <OnShow method="OnShow" />
             <OnHide method="OnHide" />
             <OnEvent method="OnEvent" />
+            <OnDragStart method="StartMoving" />
+            <OnDragStop method="StopMovingOrSizing" />
         </Scripts>
     </Frame>
 

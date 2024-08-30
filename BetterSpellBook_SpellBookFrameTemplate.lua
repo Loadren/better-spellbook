@@ -11,9 +11,9 @@ BetterSpellBookPrevPageButtonMixin = {}
 BetterSpellBookNextPageButtonMixin = {}
 NonPassiveCheckMixin = {}
 
--- Define the events that should be registered 
-local SpellBookEvents = {"ADDON_LOADED", "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "PLAYER_SPECIALIZATION_CHANGED",
-                         "PET_BAR_UPDATE"}
+-- Define the events that should be registered
+local SpellBookEvents = { "ADDON_LOADED", "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "PLAYER_SPECIALIZATION_CHANGED",
+    "PET_BAR_UPDATE", "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED" }
 
 -- OnLoad script for the spellbook frame
 function BetterSpellBookFrameMixin:OnLoad()
@@ -21,7 +21,7 @@ function BetterSpellBookFrameMixin:OnLoad()
     UIPanelWindows["BetterSpellBookFrameTemplate"] = {
         area = "right",
         pushable = 1,
-        whileDead = 1
+        whileDead = 1,
     }
 
     -- Better access on other files
@@ -29,6 +29,7 @@ function BetterSpellBookFrameMixin:OnLoad()
 
     -- Register loaded event
     FrameUtil.RegisterFrameForEvents(self, SpellBookEvents);
+    self:RegisterForDrag("LeftButton");
 
     -- Add the tab for player
     TabSystemOwnerMixin.OnLoad(self);
@@ -82,6 +83,20 @@ function BetterSpellBookFrameMixin:SetTab(tabID)
     TabSystemOwnerMixin.SetTab(self, tabID);
 end
 
+function BetterSpellBookFrameMixin:EnteringCombat()
+    self.wasShown = self:IsShown();
+    if self.wasShown then
+        print("Entering combat, hiding spellbook.")
+        self:Hide();
+    end
+end
+
+function BetterSpellBookFrameMixin:LeavingCombat()
+    if self.wasShown then
+        self:Show();
+    end
+end
+
 -- OnEvent script for the spellbook frame
 function BetterSpellBookFrameMixin:OnEvent(event, addOnName)
     if event == "SPELLS_CHANGED" or event == "LEARNED_SPELL_IN_TAB" or event == "PET_BAR_UPDATE" then
@@ -91,15 +106,22 @@ function BetterSpellBookFrameMixin:OnEvent(event, addOnName)
         self:UpdatePortrait();
     end
     -- If spellbook is open, open instead better spellbook
-    if addOnName == "Blizzard_PlayerSpells" then
+    if addOnName == "Blizzard_PlayerSpells" and event == "ADDON_LOADED" then
         PlayerSpellsFrame.SpellBookFrame:HookScript("OnShow", function()
-            HideUIPanel(PlayerSpellsFrame)
+            if not InCombatLockdown() then
+                HideUIPanel(PlayerSpellsFrame)
 
-            -- Show the better spellbook
-            self:ToggleBetterSpellBook()
+                -- Show the better spellbook
+                self:ToggleBetterSpellBook()
+            end
         end)
     end
 
+    if event == "PLAYER_REGEN_DISABLED" then
+        self:EnteringCombat();
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        self:LeavingCombat();
+    end
 end
 
 function BetterSpellBookFrameMixin:OnShow()
@@ -137,4 +159,3 @@ function BetterSpellBookNextPageButtonMixin:OnClick()
 end
 
 _G["BetterSpellBookFrameMixin"] = BetterSpellBookFrameMixin
-
