@@ -5,9 +5,9 @@ BetterPlayerSpellBookMixin = {}
 
 -- OnLoad script for the spellbook frame
 function BetterPlayerSpellBookMixin:OnLoad()
-    self.currentPage = 1 -- Default to page 1
+    self.currentPage = 1      -- Default to page 1
     self.currentSkillLine = 1 -- Default to the first skill line
-    self.spellsPerPage = 12 -- Number of spells per page
+    self.spellsPerPage = 12   -- Number of spells per page
 
     -- Initialize the page text
     self.Navigation.pageText:SetFormattedText(PAGE_NUMBER, self.currentPage)
@@ -26,6 +26,14 @@ function BetterPlayerSpellBookMixin:OnLoad()
         self:UpdateSpellButtons()
     end)
 
+    -- Set the scroll events to move the page left and right
+    self:SetScript("OnMouseWheel", function(self, delta)
+        if delta > 0 then
+            self:PreviousPage()
+        else
+            self:NextPage()
+        end
+    end)
 end
 
 -- Get Spell List
@@ -143,7 +151,6 @@ function BetterPlayerSpellBookMixin:LoadSkillLineTabs()
             local tabButton = self.SkillLine["BetterSpellBookSkillLineTab" .. i]
             tabButton:Setup(skillLineInfo, i)
         end
-
     end
 end
 
