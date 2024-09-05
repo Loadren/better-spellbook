@@ -18,7 +18,11 @@ function BetterSpellButtonMixin:OnLoad()
     self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
 
     -- Register the button for drag events
-    self:RegisterForDrag("LeftButton")
+    self:RegisterForDrag("LeftButton");
+    self:RegisterForClicks("AnyUp");
+
+    self:SetAttribute("pressAndHoldAction", true);
+    self:SetAttribute("typerelease", "spell");
 end
 
 function BetterSpellButtonMixin:OnEvent(event, ...)
@@ -44,8 +48,6 @@ function BetterSpellButtonMixin:OnLeave()
     -- Deactivate the shine texture
     self.SlotFrameShine:Hide()
 end
-
-
 
 function BetterSpellButtonMixin:OnDrag()
     if self.isPetSpell then

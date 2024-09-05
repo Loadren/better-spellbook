@@ -1,8 +1,6 @@
 # Better SpellBook
 
-## [0.1.0](https://github.com/Loadren/better-spellbook/tree/0.1.0) (2024-08-27)
-[Full Changelog](https://github.com/Loadren/better-spellbook/commits/0.1.0) [Previous Releases](https://github.com/Loadren/better-spellbook/releases)
+## [0.4.1](https://github.com/Loadren/better-spellbook/tree/0.4.1) (2024-09-05)
+[Full Changelog](https://github.com/Loadren/better-spellbook/compare/0.4.0...0.4.1) [Previous Releases](https://github.com/Loadren/better-spellbook/releases)
 
-- workflow + curseproject  
-- First push  
-- Initial commit  
+- fixing combat lockdown  

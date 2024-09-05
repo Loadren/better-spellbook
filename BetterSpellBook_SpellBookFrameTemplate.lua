@@ -107,6 +107,7 @@ function BetterSpellBookFrameMixin:OnEvent(event, addOnName)
     -- If spellbook is open, open instead better spellbook
     if addOnName == "Blizzard_PlayerSpells" and event == "ADDON_LOADED" then
         local altSelf = self;
+
         PlayerSpellsFrame.SpellBookFrame:HookScript("OnShow", function()
             altSelf:OnBlizzardSpellBookShow()
         end)
@@ -117,6 +118,78 @@ function BetterSpellBookFrameMixin:OnEvent(event, addOnName)
     elseif event == "PLAYER_REGEN_ENABLED" then
         self:LeavingCombat();
     end
+end
+
+function BetterSpellBookFrameMixin:CreateButton(name, parent)
+    local button = CreateFrame("CheckButton", "$parent" .. name, parent, "SpellBookItemTemplate")
+    button:SetParentKey(name)
+    button:SetSize(180, 60)
+
+    return button
+end
+
+-- Function to create the custom spell buttons using SpellBookItemTemplate
+function BetterSpellBookFrameMixin:CreateCustomSpellButtons(book)
+
+    -- Button 1
+    local button1 = self:CreateButton("BetterSpellButton1", book.SpellButtons)
+    button1:SetID(1)
+    button1:SetPoint("TOPLEFT", book.SpellButtons, "TOPLEFT", 100, -75)
+
+    -- Button 2
+    local button2 = self:CreateButton("BetterSpellButton2", book.SpellButtons)
+    button2:SetID(7)
+    button2:SetPoint("TOPLEFT", button1, "TOPLEFT", 200, 0)
+
+    -- Button 3
+    local button3 = self:CreateButton("BetterSpellButton3", book.SpellButtons)
+    button3:SetID(2)
+    button3:SetPoint("TOPLEFT", button1, "TOPLEFT", 0, -65)
+
+    -- Button 4
+    local button4 = self:CreateButton("BetterSpellButton4", book.SpellButtons)
+    button4:SetID(8)
+    button4:SetPoint("TOPLEFT", button3, "TOPLEFT", 200, 0)
+
+    -- Button 5
+    local button5 = self:CreateButton("BetterSpellButton5", book.SpellButtons)
+    button5:SetID(3)
+    button5:SetPoint("TOPLEFT", button3, "TOPLEFT", 0, -65)
+
+    -- Button 6
+    local button6 = self:CreateButton("BetterSpellButton6", book.SpellButtons)
+    button6:SetID(9)
+    button6:SetPoint("TOPLEFT", button5, "TOPLEFT", 200, 0)
+
+    -- Button 7
+    local button7 = self:CreateButton("BetterSpellButton7", book.SpellButtons)
+    button7:SetID(4)
+    button7:SetPoint("TOPLEFT", button5, "TOPLEFT", 0, -65)
+
+    -- Button 8
+    local button8 = self:CreateButton("BetterSpellButton8", book.SpellButtons)
+    button8:SetID(10)
+    button8:SetPoint("TOPLEFT", button7, "TOPLEFT", 200, 0)
+
+    -- Button 9
+    local button9 = self:CreateButton("BetterSpellButton9", book.SpellButtons)
+    button9:SetID(5)
+    button9:SetPoint("TOPLEFT", button7, "TOPLEFT", 0, -65)
+
+    -- Button 10
+    local button10 = self:CreateButton("BetterSpellButton10", book.SpellButtons)
+    button10:SetID(11)
+    button10:SetPoint("TOPLEFT", button9, "TOPLEFT", 200, 0)
+
+    -- Button 11
+    local button11 = self:CreateButton("BetterSpellButton11", book.SpellButtons)
+    button11:SetID(6)
+    button11:SetPoint("TOPLEFT", button9, "TOPLEFT", 0, -65)
+
+    -- Button 12
+    local button12 = self:CreateButton("BetterSpellButton12", book.SpellButtons)
+    button12:SetID(12)
+    button12:SetPoint("TOPLEFT", button11, "TOPLEFT", 200, 0)
 end
 
 function BetterSpellBookFrameMixin:OnShow()
