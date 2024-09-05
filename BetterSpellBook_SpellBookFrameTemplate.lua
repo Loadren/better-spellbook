@@ -1,10 +1,6 @@
 local addonName, BetterSpellBook = ...
 local SpellTable = BetterSpellBook.SpellTable
 
--- Global declarations for keybinds
-BINDING_HEADER_BETTER_SPELLBOOK = "Better Spellbook"
-BINDING_NAME_BETTER_SPELLBOOK_SHOW_SPELLBOOK = "Show Spellbook"
-
 -- Define the Mixin tables
 BetterSpellBookFrameMixin = {}
 BetterSpellBookPrevPageButtonMixin = {}
@@ -24,9 +20,6 @@ function BetterSpellBookFrameMixin:OnLoad()
         whileDead = 1,
     }
 
-    -- Better access on other files
-    BetterSpellBook.BetterSpellBookFrameMixin = self
-
     -- Register loaded event
     FrameUtil.RegisterFrameForEvents(self, SpellBookEvents);
     self:RegisterForDrag("LeftButton");
@@ -38,6 +31,12 @@ function BetterSpellBookFrameMixin:OnLoad()
 
     -- Set the default tab
     self:SetTab(self.playerTab);
+
+    -- Add a variable for custom onshow since Blizzard's OnShow is called twice sometimes
+    self.OnShowBlizzardEventTriggered = false;
+
+    -- And add a variable for when the Blizzard spellbook hides the frame, so we can differentiate player interaction and UI interaction
+    self.wasShownPriorToBlizzardUIHide = false;
 
     -- Initialize the spell buttons for the first page when BetterSpellBook.UpdateSpells is triggered
     EventRegistry:RegisterCallback("BetterSpellBook.UpdateSpells", function()
@@ -84,15 +83,15 @@ function BetterSpellBookFrameMixin:SetTab(tabID)
 end
 
 function BetterSpellBookFrameMixin:EnteringCombat()
-    self.wasShown = self:IsShown();
-    if self.wasShown then
+    self.wasShownPriorToCombat = self:IsShown();
+    if self.wasShownPriorToCombat then
         print("Entering combat, hiding spellbook.")
         self:Hide();
     end
 end
 
 function BetterSpellBookFrameMixin:LeavingCombat()
-    if self.wasShown then
+    if self.wasShownPriorToCombat then
         self:Show();
     end
 end
@@ -107,13 +106,9 @@ function BetterSpellBookFrameMixin:OnEvent(event, addOnName)
     end
     -- If spellbook is open, open instead better spellbook
     if addOnName == "Blizzard_PlayerSpells" and event == "ADDON_LOADED" then
+        local altSelf = self;
         PlayerSpellsFrame.SpellBookFrame:HookScript("OnShow", function()
-            if not InCombatLockdown() then
-                HideUIPanel(PlayerSpellsFrame)
-
-                -- Show the better spellbook
-                self:ToggleBetterSpellBook()
-            end
+            altSelf:OnBlizzardSpellBookShow()
         end)
     end
 
@@ -130,15 +125,36 @@ end
 
 function BetterSpellBookFrameMixin:OnHide()
     EventRegistry:TriggerEvent("BetterSpellBookFrame.Hide");
+    self.wasShownPriorToBlizzardUIHide = true;
+
+    C_Timer.After(0.1, function()
+        self.wasShownPriorToBlizzardUIHide = false;
+    end)
 end
 
 -- ToggleBetterSpellBook function to show/hide the spellbook frame
 function BetterSpellBookFrameMixin:ToggleBetterSpellBook()
-    -- show all property names of BetterSpellBookFrameTemplate
-    if self:IsShown() then
+    if self:IsShown() or self.wasShownPriorToBlizzardUIHide then
         HideUIPanel(self)
     else
         ShowUIPanel(self)
+    end
+end
+
+function BetterSpellBookFrameMixin:OnBlizzardSpellBookShow()
+    if PlayerSpellsFrame:IsShown() then
+        PlayerSpellsFrame:Hide()
+
+        if not self.OnShowBlizzardEventTriggered then
+            self.OnShowBlizzardEventTriggered = true;
+            self:ToggleBetterSpellBook()
+
+            -- Start a 100ms cooldown timer, meaning we can't show the spellbook twice during this time frame
+            -- This is done to prevent the spellbook from showing twice when the player opens the spellbook because of Blizzard's events
+            C_Timer.After(0.1, function()
+                self.OnShowBlizzardEventTriggered = false;
+            end)
+        end
     end
 end
 
