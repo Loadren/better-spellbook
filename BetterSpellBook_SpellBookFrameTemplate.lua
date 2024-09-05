@@ -142,6 +142,9 @@ function BetterSpellBookFrameMixin:ToggleBetterSpellBook()
 end
 
 function BetterSpellBookFrameMixin:OnBlizzardSpellBookShow()
+    if InCombatLockdown() then
+        return;
+    end
     if PlayerSpellsFrame:IsShown() then
         PlayerSpellsFrame:Hide()
 
