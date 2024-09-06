@@ -219,7 +219,7 @@ function BetterSpellBookFrameMixin:OnBlizzardSpellBookShow()
         return;
     end
     if PlayerSpellsFrame:IsShown() then
-        PlayerSpellsFrame:Hide()
+        HideUIPanel(PlayerSpellsFrame)
 
         if not self.OnShowBlizzardEventTriggered then
             self.OnShowBlizzardEventTriggered = true;
