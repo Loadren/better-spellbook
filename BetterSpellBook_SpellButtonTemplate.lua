@@ -39,6 +39,11 @@ function BetterSpellButtonMixin:OnEnter()
 
     -- Activate the shine texture
     self.SlotFrameShine:Show()
+
+    -- If the glyph is casted and the spell is the same as the glyph spell, show the highlight
+    if self.spellInfo.isGlyphActive then
+        self.GlyphHighlight:Show()
+    end
 end
 
 function BetterSpellButtonMixin:OnLeave()
@@ -47,6 +52,9 @@ function BetterSpellButtonMixin:OnLeave()
 
     -- Deactivate the shine texture
     self.SlotFrameShine:Hide()
+
+    -- Hide the glyph highlight
+    self.GlyphHighlight:Hide()
 end
 
 function BetterSpellButtonMixin:OnDrag()
@@ -80,19 +88,32 @@ function BetterSpellButtonMixin:UpdateSpellInfo(spellInfo, isPetSpell)
     self.spellInfo = spellInfo
     self.isPetSpell = isPetSpell
 
-    -- Display the spell type (e.g., Passive or Flyout)
-    if spellInfo.isPassive then
-        self.SubSpellName:SetText(SPELL_PASSIVE)
-        self:SetAttribute("type", "spell")
-        self:SetAttribute("spell", spellInfo.spellID)
-    elseif spellInfo.spellType == Enum.SpellBookItemType.Flyout then
-        self.SubSpellName:SetText("")
-        self:SetAttribute("type", "flyout")
-        self:SetAttribute("spell", spellInfo.spellID)
+
+    -- In case a glyph is being cast on the spell, set the attribute to nil
+    if spellInfo.isGlyphActive then
+        local name, id = GetPendingGlyphName()
+
+        self:SetScript("PreClick", self.UseGlyph)
+        self:SetAttribute("type", nil)
     else
-        self.SubSpellName:SetText("")
-        self:SetAttribute("type", "spell")
-        self:SetAttribute("spell", spellInfo.spellID)
+
+        --Normal behavior (when glyph isn't applied)
+        self:SetScript("PreClick", nil)
+
+        -- Display the spell type (e.g., Passive or Flyout)
+        if spellInfo.isPassive then
+            self.SubSpellName:SetText(SPELL_PASSIVE)
+            self:SetAttribute("type", "spell")
+            self:SetAttribute("spell", spellInfo.spellID)
+        elseif spellInfo.spellType == Enum.SpellBookItemType.Flyout then
+            self.SubSpellName:SetText("")
+            self:SetAttribute("type", "flyout")
+            self:SetAttribute("spell", spellInfo.spellID)
+        else
+            self.SubSpellName:SetText("")
+            self:SetAttribute("type", "spell")
+            self:SetAttribute("spell", spellInfo.spellID)
+        end
     end
 
     -- Update the cooldown display for the spell button
@@ -103,6 +124,13 @@ function BetterSpellButtonMixin:UpdateSpellInfo(spellInfo, isPetSpell)
 
     -- Show the button
     self:Show()
+end
+
+-- Function to use the glyph
+function BetterSpellButtonMixin:UseGlyph()
+    if self.spellInfo.isGlyphActive then
+        AttachGlyphToSpell(self.spellInfo.spellID)
+    end
 end
 
 function BetterSpellButtonMixin:UpdateCooldown()
@@ -138,5 +166,19 @@ function BetterSpellButtonMixin:UpdateSpellButtonVisuals(spellInfo)
         self.FlyoutArrow:Show()
     else
         self.FlyoutArrow:Hide()
+    end
+
+    --Add the glyph icon if a glyph is attached
+    if spellInfo.hasAttachedGlyph then
+        self.GlyphIcon:Show()
+    else
+        self.GlyphIcon:Hide()
+    end
+
+    -- Add the glyph highlight if a glyph is being used
+    if spellInfo.isGlyphActive then
+        self.GlyphActivateHighlight:Show()
+    else
+        self.GlyphActivateHighlight:Hide()
     end
 end

@@ -1,7 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
     <Script file="BetterSpellBook_SpellButtonTemplate.lua" />
-    <Button name="BetterSpellButtonTemplate" virtual="true" mixin="BetterSpellButtonMixin" inherits="SecureActionButtonTemplate">
+    <Button name="BetterSpellButtonTemplate" virtual="true" mixin="BetterSpellButtonMixin"
+        inherits="SecureActionButtonTemplate">
         <Size>
             <AbsDimension x="37" y="37" />
         </Size>
@@ -59,7 +60,7 @@
                     </Anchors>
                 </FontString>
             </Layer>
-            <Layer level="OVERLAY">
+            <Layer level="OVERLAY" textureSubLevel="2">
                 <Texture parentKey="AutoCastable" file="Interface/Buttons/UI-AutoCastableOverlay"
                     hidden="true">
                     <Size>
@@ -93,8 +94,9 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-                <Texture parentKey="SlotFrameShine" file="Interface/SpellBook/SpellbookElementsIconSheenMask" 
-                hidden="true" alphaMode="ADD">
+                <Texture parentKey="SlotFrameShine"
+                    file="Interface/SpellBook/SpellbookElementsIconSheenMask"
+                    hidden="true" alphaMode="ADD">
                     <Size x="57" y="55" />
                     <Anchors>
                         <Anchor point="CENTER">
@@ -104,7 +106,7 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-                
+
                 <Texture parentKey="CustomShine" file="Interface/Cooldown/star4" hidden="true">
                     <Size>
                         <AbsDimension x="60" y="60" />
@@ -113,8 +115,9 @@
                         <Anchor point="CENTER" />
                     </Anchors>
                 </Texture>
+
             </Layer>
-            <Layer level="OVERLAY" textureSubLevel="1">
+            <Layer level="OVERLAY" textureSubLevel="3">
                 <Texture parentKey="FlyoutArrow" atlas="UI-HUD-ActionBar-Flyout" rotation="-90">
                     <Size>
                         <AbsDimension x="12" y="12" />
@@ -125,6 +128,24 @@
                                 <AbsDimension x="-18" y="10" />
                             </Offset>
                         </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="GlyphActivateHighlight" hidden="true" alpha="1" alphaMode="ADD"
+                    file="Interface\Buttons\CheckButtonHilight-Blue">
+                    <Anchors>
+                        <Anchor point="CENTER" />
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="GlyphIcon" hidden="true" alpha="1" alphaMode="BLEND"
+                    atlas="GlyphIcon-Spellbook" useAtlasSize="true">
+                    <Anchors>
+                        <Anchor point="TOPRIGHT" x="6" y="7" />
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="GlyphHighlight" hidden="true" alpha="1" alphaMode="ADD"
+                    file="Interface\Buttons\CheckButtonHilight-Blue">
+                    <Anchors>
+                        <Anchor point="CENTER" />
                     </Anchors>
                 </Texture>
             </Layer>
@@ -151,7 +172,7 @@
             <OnLoad method="OnLoad" />
             <OnEnter method="OnEnter" />
             <OnLeave method="OnLeave" />
-            <OnEvent method="OnEvent" />    
+            <OnEvent method="OnEvent" />
             <OnDragStart method="OnDrag" />
         </Scripts>
     </Button>

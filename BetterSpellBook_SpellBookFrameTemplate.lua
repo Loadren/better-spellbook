@@ -9,7 +9,7 @@ NonPassiveCheckMixin = {}
 
 -- Define the events that should be registered
 local SpellBookEvents = { "ADDON_LOADED", "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB", "PLAYER_SPECIALIZATION_CHANGED",
-    "PET_BAR_UPDATE", "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED" }
+    "PET_BAR_UPDATE", "PLAYER_REGEN_DISABLED", "PLAYER_REGEN_ENABLED", "USE_GLYPH", "CANCEL_GLYPH_CAST", "ACTIVATE_GLYPH" }
 
 -- OnLoad script for the spellbook frame
 function BetterSpellBookFrameMixin:OnLoad()
@@ -31,6 +31,9 @@ function BetterSpellBookFrameMixin:OnLoad()
 
     -- Set the default tab
     self:SetTab(self.playerTab);
+
+    -- Add a table for glyphs
+    self.spellsTargetedByGlyphs = {}
 
     -- Add a variable for custom onshow since Blizzard's OnShow is called twice sometimes
     self.OnShowBlizzardEventTriggered = false;
@@ -97,7 +100,7 @@ function BetterSpellBookFrameMixin:LeavingCombat()
 end
 
 -- OnEvent script for the spellbook frame
-function BetterSpellBookFrameMixin:OnEvent(event, addOnName)
+function BetterSpellBookFrameMixin:OnEvent(event, arg1)
     if event == "SPELLS_CHANGED" or event == "LEARNED_SPELL_IN_TAB" or event == "PET_BAR_UPDATE" then
         SpellTable:HandlePopulatePlayerSpellsWithCooldown()
     end
@@ -105,7 +108,7 @@ function BetterSpellBookFrameMixin:OnEvent(event, addOnName)
         self:UpdatePortrait();
     end
     -- If spellbook is open, open instead better spellbook
-    if addOnName == "Blizzard_PlayerSpells" and event == "ADDON_LOADED" then
+    if arg1 == "Blizzard_PlayerSpells" and event == "ADDON_LOADED" then
         local altSelf = self;
 
         PlayerSpellsFrame.SpellBookFrame:HookScript("OnShow", function()
@@ -117,6 +120,55 @@ function BetterSpellBookFrameMixin:OnEvent(event, addOnName)
         self:EnteringCombat();
     elseif event == "PLAYER_REGEN_ENABLED" then
         self:LeavingCombat();
+    end
+
+    if event == "USE_GLYPH" then
+        self:UseGlyph(arg1)
+    end
+
+    if event == "CANCEL_GLYPH_CAST" or event == "ACTIVATE_GLYPH" then
+        self:CancelGlyphCast()
+    end
+end
+
+function BetterSpellBookFrameMixin:CancelGlyphCast()
+    for spellID, spellInfo in pairs(self.spellsTargetedByGlyphs) do
+        spellInfo.isGlyphActive = false;
+    end
+    self.spellsTargetedByGlyphs = {}
+    self.PlayerSpellBook:UpdateSpellButtons()
+    self.PetSpellBook:UpdateSpellButtons()
+end
+
+function BetterSpellBookFrameMixin:UseGlyph(spellID)
+    local spellInfo = SpellTable:GetSpellData(spellID);
+    local spellBookSpellBank, skillLineIndex, spellIndex = SpellTable:FindSpellPosition(spellID)
+
+    if skillLineIndex and spellIndex then
+
+        if not self:IsShown() then
+            self:ToggleBetterSpellBook()
+        end
+        
+        -- Calculate which page the spell is on
+        local spellsPerPage = self.spellsPerPage or 12
+        local page = math.ceil(spellIndex / spellsPerPage)
+        local spellBook = spellBookSpellBank == Enum.SpellBookSpellBank.Player and self.PlayerSpellBook or self.PetSpellBook
+
+        -- Switch to the correct tab
+        if spellBookSpellBank == Enum.SpellBookSpellBank.Player then
+            self:SetTab(self.playerTab);
+            spellBook:SwitchSkillLine(skillLineIndex)
+            spellBook:UpdateSkillLineButtons()
+        else
+            self:SetTab(self.petTab);
+        end
+ 
+        spellBook:SetPage(page, true)
+
+        spellInfo.isGlyphActive = true;
+        self.spellsTargetedByGlyphs[spellID] = spellInfo;
+        spellBook:UpdateSpellButtons()
     end
 end
 
@@ -130,7 +182,6 @@ end
 
 -- Function to create the custom spell buttons using SpellBookItemTemplate
 function BetterSpellBookFrameMixin:CreateCustomSpellButtons(book)
-
     -- Button 1
     local button1 = self:CreateButton("BetterSpellButton1", book.SpellButtons)
     button1:SetID(1)
@@ -207,6 +258,9 @@ end
 
 -- ToggleBetterSpellBook function to show/hide the spellbook frame
 function BetterSpellBookFrameMixin:ToggleBetterSpellBook()
+    if InCombatLockdown() then
+        return;
+    end
     if self:IsShown() or self.wasShownPriorToBlizzardUIHide then
         HideUIPanel(self)
     else

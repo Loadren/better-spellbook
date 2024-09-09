@@ -9,9 +9,55 @@ local Utils = BetterSpellBook.Utils
 SpellTable.isOnCooldown = false
 SpellTable.callWhenCooldownEnds = false
 
+-- Function to find the position of a spell in the spellbook
+function SpellTable:FindSpellPosition(spellID)
+    -- Iterate through all skill lines (Player's spellbook)
+    for skillLineIndex, skillLineSpells in pairs(SpellTable.spells["Player"]) do
+        -- Iterate over each spell in the skill line
+        for spellIndex, spellData in ipairs(skillLineSpells) do
+            -- Compare the spellID to find the correct spell
+            if spellData.spellID == spellID then
+                -- Return the position in terms of skill line, tab, and index
+                return Enum.SpellBookSpellBank.Player, skillLineIndex, spellIndex
+            end
+        end
+    end
+
+    -- Iterate through pet spells if needed
+    if SpellTable.spells["Pet"] then
+        for skillLineIndex, petSpells in pairs(SpellTable.spells["Pet"]) do
+            for spellIndex, spellData in ipairs(petSpells) do
+                if spellData.spellID == spellID then
+                    return Enum.SpellBookSpellBank.Pet, skillLineIndex, spellIndex
+                end
+            end
+        end
+    end
+
+    -- Return nil if the spell is not found
+    return nil, nil
+end
+
+function SpellTable:GetSpellData(spellID)
+    for _, skillLine in pairs(SpellTable.spells["Player"]) do
+        for _, spell in pairs(skillLine) do
+            if spell.spellID == spellID then
+                return spell
+            end
+        end
+    end
+
+    for _, spell in pairs(SpellTable.spells["Pet"][1]) do
+        if spell.spellID == spellID then
+            return spell
+        end
+    end
+
+    return nil
+end
+
 -- Function to populate the player's spell table and sort spells by type and name
 function SpellTable:PopulateSpells()
-
     -- Clear the table before populating
     if SpellTable.spells then
         table.wipe(SpellTable.spells)
@@ -45,7 +91,8 @@ function SpellTable:PopulateSpells()
 
             -- Only store the spell if it has a valid action ID (i.e., it's not empty)
             if name and spellInfo and spellInfo.actionID then
-                local spellID = flyoutID or spellInfo.spellID or spellInfo.actionID -- Because sometimes it's on actionID
+                local spellID = flyoutID or spellInfo.spellID or spellInfo
+                    .actionID -- Because sometimes it's on actionID
 
                 local isKnown = IsSpellKnownOrOverridesKnown(spellID, false) or flyoutInfo.isKnown
 
@@ -57,7 +104,8 @@ function SpellTable:PopulateSpells()
                     isKnown = (not spellInfo.isOffSpec) and isKnown,
                     isOffSpec = spellInfo.isOffSpec,
                     icon = spellInfo.iconID,
-                    spellType = spellInfo.itemType
+                    spellType = spellInfo.itemType,
+                    hasAttachedGlyph = HasAttachedGlyph(spellID),
                 }
 
                 -- Add to the combined spell table (both active and passive)
@@ -70,7 +118,6 @@ function SpellTable:PopulateSpells()
 
         -- Store the sorted spells in the Player's spell table
         SpellTable.spells["Player"][i] = combinedSpells
-        
     end
 
     -- Pet Spells

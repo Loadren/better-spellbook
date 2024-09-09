@@ -90,10 +90,13 @@ function BetterPlayerSpellBookMixin:PreviousPage()
     self.Navigation.pageText:SetFormattedText(PAGE_NUMBER, self.currentPage)
 end
 
--- SetPage doesn't need UpdateSpellButtons since it's called inside already
-function BetterPlayerSpellBookMixin:SetPage(page)
+-- SetPage doesn't need UpdateSpellButtons since it's called inside already, unless we force the reload
+function BetterPlayerSpellBookMixin:SetPage(page, forceReload)
     self.currentPage = page
     self.Navigation.pageText:SetFormattedText(PAGE_NUMBER, self.currentPage)
+    if forceReload then
+        self:UpdateSpellButtons()
+    end
 end
 
 function BetterPlayerSpellBookMixin:UpdateSpellButtons()
