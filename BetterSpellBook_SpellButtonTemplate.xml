@@ -148,6 +148,21 @@
                         <Anchor point="CENTER" />
                     </Anchors>
                 </Texture>
+                <Texture parentKey="ActionBarHighlight" atlas="spellbook-item-unassigned-glow" alphaMode="ADD" useAtlasSize="false" hidden="true" setAllPoints="true" texelSnappingBias="0.0" snapToPixelGrid="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="-4" y="3"/>
+                        <Anchor point="BOTTOMRIGHT" x="3" y="-3"/>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="Anim" inherits="VisibleWhilePlayingAnimGroupTemplate, SyncedAnimGroupTemplate" looping="REPEAT" setToFinalAlpha="true">
+                            <KeyValues>
+                                <KeyValue key="syncKey" value="SpellBookItemLoops" type="string"/>
+                            </KeyValues>
+                            <Alpha fromAlpha="0.5" toAlpha="1" duration="0.5" order="1" smoothing="OUT"/>
+                            <Alpha fromAlpha="1" toAlpha="0.5" duration="0.5" order="2" smoothing="IN"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
             </Layer>
         </Layers>
         <Frames>

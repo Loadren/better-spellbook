@@ -16,6 +16,8 @@ end
 function BetterSpellButtonMixin:OnLoad()
     -- Register events
     self:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+    self:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
+    self:RegisterEvent("ACTIONBAR_UPDATE_USABLE")
 
     -- Register the button for drag events
     self:RegisterForDrag("LeftButton");
@@ -23,11 +25,15 @@ function BetterSpellButtonMixin:OnLoad()
 
     self:SetAttribute("pressAndHoldAction", true);
     self:SetAttribute("typerelease", "spell");
+
+    self.seenSpellIds = {};
 end
 
 function BetterSpellButtonMixin:OnEvent(event, ...)
     if event == "SPELL_UPDATE_COOLDOWN" then
         self:UpdateCooldown()
+    elseif event == "ACTIONBAR_SLOT_CHANGED" or event == "ACTIONBAR_UPDATE_USABLE" then
+        self:UpdateActionBarAnim()
     end
 end
 
@@ -39,11 +45,14 @@ function BetterSpellButtonMixin:OnEnter()
 
     -- Activate the shine texture
     self.SlotFrameShine:Show()
+    self.isHover = true
 
     -- If the glyph is casted and the spell is the same as the glyph spell, show the highlight
     if self.spellInfo.isGlyphActive then
         self.GlyphHighlight:Show()
     end
+
+    self:UpdateActionBarAnim()
 end
 
 function BetterSpellButtonMixin:OnLeave()
@@ -52,9 +61,12 @@ function BetterSpellButtonMixin:OnLeave()
 
     -- Deactivate the shine texture
     self.SlotFrameShine:Hide()
+    self.isHover = false
 
     -- Hide the glyph highlight
     self.GlyphHighlight:Hide()
+
+    self:UpdateActionBarAnim()
 end
 
 function BetterSpellButtonMixin:OnDrag()
@@ -71,6 +83,10 @@ function BetterSpellButtonMixin:GetFunctionalSpellID(spellID)
 end
 
 function BetterSpellButtonMixin:UpdateSpellInfo(spellInfo, isPetSpell)
+    if InCombatLockdown() then
+        return;
+    end
+
     if not spellInfo then
         return self:Hide()
     end
@@ -88,7 +104,6 @@ function BetterSpellButtonMixin:UpdateSpellInfo(spellInfo, isPetSpell)
     self.spellInfo = spellInfo
     self.isPetSpell = isPetSpell
 
-
     -- In case a glyph is being cast on the spell, set the attribute to nil
     if spellInfo.isGlyphActive then
         local name, id = GetPendingGlyphName()
@@ -96,7 +111,6 @@ function BetterSpellButtonMixin:UpdateSpellInfo(spellInfo, isPetSpell)
         self:SetScript("PreClick", self.UseGlyph)
         self:SetAttribute("type", nil)
     else
-
         --Normal behavior (when glyph isn't applied)
         self:SetScript("PreClick", nil)
 
@@ -121,6 +135,12 @@ function BetterSpellButtonMixin:UpdateSpellInfo(spellInfo, isPetSpell)
 
     -- Update all the spell button visuals
     self:UpdateSpellButtonVisuals(spellInfo)
+
+    -- Add the spell to the seen spell IDs table if it's not already there
+    -- Do it after the visuals are updated so the highlight is shown at least once
+    if not self.seenSpellIds[self.spellID] then
+        self.seenSpellIds[self.spellID] = true
+    end
 
     -- Show the button
     self:Show()
@@ -161,6 +181,8 @@ function BetterSpellButtonMixin:UpdateSpellButtonVisuals(spellInfo)
         self.SubSpellName:SetTextColor(VERY_DARK_GRAY_COLOR.r, VERY_DARK_GRAY_COLOR.g, VERY_DARK_GRAY_COLOR.b)
     end
 
+    self:UpdateActionBarAnim()
+
     -- Show or hide the flyout arrow
     if spellInfo.spellType == Enum.SpellBookItemType.Flyout then
         self.FlyoutArrow:Show()
@@ -180,5 +202,26 @@ function BetterSpellButtonMixin:UpdateSpellButtonVisuals(spellInfo)
         self.GlyphActivateHighlight:Show()
     else
         self.GlyphActivateHighlight:Hide()
+    end
+end
+
+function BetterSpellButtonMixin:UpdateActionBarAnim()
+    if InCombatLockdown() then
+        return;
+    end
+    self.actionBarStatus = SpellSearchUtil.GetActionbarStatusForSpell(self.spellID);
+    local shouldPlayHighlight = self.actionBarStatus == ActionButtonUtil.ActionBarActionStatus.MissingFromAllBars and
+        not self.spellInfo.isPassive and not self.isHover and self.spellInfo.isKnown and
+        not self.seenSpellIds[self.spellID] and self:IsShown();
+    self:UpdateSynchronizedAnimState(self.ActionBarHighlight.Anim, shouldPlayHighlight);
+end
+
+function BetterSpellButtonMixin:UpdateSynchronizedAnimState(animGroup, shouldBePlaying)
+    local isPlaying = animGroup:IsPlaying();
+    if shouldBePlaying and not isPlaying then
+        -- Ensure all looping anims stay synced with other SpellBookItems
+        animGroup:PlaySynced();
+    elseif not shouldBePlaying and isPlaying then
+        animGroup:Stop();
     end
 end
