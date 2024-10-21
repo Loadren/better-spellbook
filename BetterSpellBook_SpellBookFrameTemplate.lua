@@ -107,6 +107,12 @@ function BetterSpellBookFrameMixin:OnEvent(event, arg1)
     if event == "PLAYER_SPECIALIZATION_CHANGED" then
         self:UpdatePortrait();
     end
+
+    --If Clique is loaded, we need to register it in a global variable
+    if event == "ADDON_LOADED" and arg1 == "Clique" then
+        BetterSpellBook.isCliqueLoaded = true;
+    end
+
     -- If spellbook is open, open instead better spellbook
     if arg1 == "Blizzard_PlayerSpells" and event == "ADDON_LOADED" then
         local altSelf = self;
@@ -120,6 +126,11 @@ function BetterSpellBookFrameMixin:OnEvent(event, arg1)
         self:EnteringCombat();
     elseif event == "PLAYER_REGEN_ENABLED" then
         self:LeavingCombat();
+    end
+
+    -- If we are loaded, we need to check if Clique has been loaded before us
+    if event == "ADDON_LOADED" and arg1 == addonName then
+        BetterSpellBook.isCliqueLoaded = C_AddOns.IsAddOnLoaded("Clique");
     end
 
     if event == "USE_GLYPH" then
@@ -145,15 +156,15 @@ function BetterSpellBookFrameMixin:UseGlyph(spellID)
     local spellBookSpellBank, skillLineIndex, spellIndex = SpellTable:FindSpellPosition(spellID)
 
     if skillLineIndex and spellIndex then
-
         if not self:IsShown() then
             self:ToggleBetterSpellBook()
         end
-        
+
         -- Calculate which page the spell is on
         local spellsPerPage = self.spellsPerPage or 12
         local page = math.ceil(spellIndex / spellsPerPage)
-        local spellBook = spellBookSpellBank == Enum.SpellBookSpellBank.Player and self.PlayerSpellBook or self.PetSpellBook
+        local spellBook = spellBookSpellBank == Enum.SpellBookSpellBank.Player and self.PlayerSpellBook or
+            self.PetSpellBook
 
         -- Switch to the correct tab
         if spellBookSpellBank == Enum.SpellBookSpellBank.Player then
@@ -163,7 +174,7 @@ function BetterSpellBookFrameMixin:UseGlyph(spellID)
         else
             self:SetTab(self.petTab);
         end
- 
+
         spellBook:SetPage(page, true)
 
         spellInfo.isGlyphActive = true;
@@ -261,10 +272,12 @@ function BetterSpellBookFrameMixin:ToggleBetterSpellBook()
     if InCombatLockdown() then
         return;
     end
-    if self:IsShown() or self.wasShownPriorToBlizzardUIHide then
-        HideUIPanel(self)
+    if BetterSpellBookFrameTemplate:IsShown() then
+        HideUIPanel(BetterSpellBookFrameTemplate)
+        PlaySound(SOUNDKIT.IG_SPELLBOOK_CLOSE)
     else
-        ShowUIPanel(self)
+        ShowUIPanel(BetterSpellBookFrameTemplate)
+        PlaySound(SOUNDKIT.IG_SPELLBOOK_OPEN)
     end
 end
 

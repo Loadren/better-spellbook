@@ -42,8 +42,17 @@ function BetterSpellBookSkillLineTabMixin:OnUpdate()
 end
 
 function BetterSpellBookSkillLineTabMixin:OnClick()
+    if self.isCustomButton then
+        self.onClick()
+        self:SetChecked(false)
+        return
+    end
+
     -- Switch to the skill line associated with this tab
     self:GetSpellBookTabFrame():SwitchSkillLine(self.skillLine)
+
+    -- Play the tab switch sound
+    PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
 
     -- Update all skillline buttons
     self:GetSpellBookTabFrame():UpdateSkillLineButtons()
@@ -70,5 +79,16 @@ function BetterSpellBookSkillLineTabMixin:Setup(skillLineInfo, skillLineIndex)
     self.tooltip = skillLineInfo.name
     self.skillLine = skillLineIndex
     self.isOffSpec = skillLineInfo.offSpecID ~= nil
+    self:OnUpdate()
+end
+
+-- Setup fucntion but for external buttons
+function BetterSpellBookSkillLineTabMixin:SetupExternal(iconID, name, skillLineIndex, onClick)
+    self:SetNormalTexture(iconID)
+    self.tooltip = name
+    self.skillLine = skillLineIndex
+    self.isOffSpec = false
+    self.onClick = onClick
+    self.isCustomButton = true
     self:OnUpdate()
 end

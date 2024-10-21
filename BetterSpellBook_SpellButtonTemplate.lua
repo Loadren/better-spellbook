@@ -210,8 +210,8 @@ function BetterSpellButtonMixin:UpdateActionBarAnim()
         return;
     end
     self.actionBarStatus = SpellSearchUtil.GetActionbarStatusForSpell(self.spellID);
-    local shouldPlayHighlight = self.actionBarStatus == ActionButtonUtil.ActionBarActionStatus.MissingFromAllBars and
-        not self.spellInfo.isPassive and not self.isHover and self.spellInfo.isKnown and
+    local shouldPlayHighlight = self.actionBarStatus == ActionButtonUtil.ActionBarActionStatus.MissingFromAllBars and 
+    self.spellInfo and not self.spellInfo.isPassive and not self.isHover and self.spellInfo.isKnown and
         not self.seenSpellIds[self.spellID] and self:IsShown();
     self:UpdateSynchronizedAnimState(self.ActionBarHighlight.Anim, shouldPlayHighlight);
 end

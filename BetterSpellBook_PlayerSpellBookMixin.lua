@@ -34,6 +34,8 @@ function BetterPlayerSpellBookMixin:OnLoad()
             self:NextPage()
         end
     end)
+
+    print("BetterPlayerSpellBookMixin Loaded")
 end
 
 -- Get Spell List
@@ -123,11 +125,15 @@ function BetterPlayerSpellBookMixin:UpdateSpellButtons()
         if spellIndex <= lastSpellIndex then
             local spellInfo = spells[spellIndex]
 
-            button.spellID = spellInfo.spellID
-            button:UpdateSpellInfo(spellInfo)
-            button:Show()
+            if not InCombatLockdown() then
+                button.spellID = spellInfo.spellID
+                button:UpdateSpellInfo(spellInfo)
+                button:Show()
+            end
         else
-            button:Hide() -- Hide buttons that don't have a corresponding spell on this page
+            if not InCombatLockdown() then
+                button:Hide() -- Hide buttons that don't have a corresponding spell on this page
+            end
         end
     end
 
@@ -155,6 +161,21 @@ function BetterPlayerSpellBookMixin:LoadSkillLineTabs()
             tabButton:Setup(skillLineInfo, i)
         end
     end
+
+    -- If parent variable Clique is true, we need to create a button for it
+    if BetterSpellBook.isCliqueLoaded then
+        local tabButton = self.SkillLine["BetterSpellBookSkillLineTab" .. (numSkillLines + 2)]
+        tabButton:SetupExternal("Interface\\AddOns\\Clique\\images\\icon_square_64", "Clique", numSkillLines + 2, function()
+            _G.Clique:ShowBindingConfig()
+
+            -- Hide the spellbook if its open
+            -- but don't try if we're in combat
+            if InCombatLockdown() then
+                return
+            end
+        end)
+    end
+        
 end
 
 -- Update all tab buttons
