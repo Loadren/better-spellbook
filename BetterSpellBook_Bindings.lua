@@ -13,6 +13,5 @@ frame:SetScript("OnEvent", function(self, event, ...)
             BetterSpellBookFrameMixin:ToggleBetterSpellBook()
         end)
         SetBindingClick("P", secureSpellbookOpener:GetName(), "LeftButton")
-        print("Binding set: P")
     end
 end)
