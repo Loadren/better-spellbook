@@ -113,15 +113,6 @@ function BetterSpellBookFrameMixin:OnEvent(event, arg1)
         BetterSpellBook.isCliqueLoaded = true;
     end
 
-    -- If spellbook is open, open instead better spellbook
-    if arg1 == "Blizzard_PlayerSpells" and event == "ADDON_LOADED" then
-        local altSelf = self;
-
-        PlayerSpellsFrame.SpellBookFrame:HookScript("OnShow", function()
-            altSelf:OnBlizzardSpellBookShow()
-        end)
-    end
-
     if event == "PLAYER_REGEN_DISABLED" then
         self:EnteringCombat();
     elseif event == "PLAYER_REGEN_ENABLED" then
