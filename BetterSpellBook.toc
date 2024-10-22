@@ -2,7 +2,7 @@
 ## Title: Better SpellBook
 ## Notes: Provide a clean, updated to today's graphics spellbook experience, but smaller!
 ## Author: Loadren
-## Version: 0.6.7
+## Version: 0.6.8
 ## DefaultState: Enabled
 ## SavedVariables: BetterSpellBookSaved
 ## X-Curse-Project-ID: 1092079
