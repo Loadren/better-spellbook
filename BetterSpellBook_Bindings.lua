@@ -1,17 +1,33 @@
 local frame = CreateFrame("Frame")
 
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+frame:RegisterEvent("UPDATE_BINDINGS")
+frame:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
+
+local spellbookOpener;
+
+
+-- Function to set the keybind for the spellbook opener button
+function SetKeybindForSpellBook()
+    --Do it after a timer because the keybinds are not loaded yet
+    local keyBindForSpellBook = GetBindingKey("TOGGLESPELLBOOK")
+    if keyBindForSpellBook then
+        SetBindingClick(keyBindForSpellBook, spellbookOpener:GetName(), "LeftButton")
+    end
+end
 
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
-        local secureSpellbookOpener = CreateFrame("Button", "SecureSpellbookOpener", UIParent,
+        spellbookOpener = CreateFrame("Button", "SpellbookOpener", UIParent,
             "SecureHandlerClickTemplate")
-        -- Assume 'MyCustomSpellbookFrame' is your spellbook frame
-        secureSpellbookOpener:SetFrameRef("BetterSpellBookFrameMixin", BetterSpellBookFrameTemplate)
-        local ok = SetBindingClick("P", secureSpellbookOpener:GetName(), "LeftButton")
-        secureSpellbookOpener:SetScript("OnClick", function(self, button, down)
+
+        -- Setting the onclick of that shortcut to open the BetterSpellBookFrame
+        spellbookOpener:SetScript("OnClick", function(self, button, down)
             BetterSpellBookFrameMixin:ToggleBetterSpellBook()
         end)
-        SetBindingClick("P", secureSpellbookOpener:GetName(), "LeftButton")
+
+        SetKeybindForSpellBook()
+    elseif event == "UPDATE_BINDINGS" and spellbookOpener then
+        SetKeybindForSpellBook()
     end
 end)

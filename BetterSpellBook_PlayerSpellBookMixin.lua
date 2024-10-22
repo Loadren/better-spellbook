@@ -166,12 +166,8 @@ function BetterPlayerSpellBookMixin:LoadSkillLineTabs()
     if BetterSpellBook.isCliqueLoaded then
         local tabButton = self.SkillLine["BetterSpellBookSkillLineTab" .. (numSkillLines + 2)]
         tabButton:SetupExternal("Interface\\AddOns\\Clique\\images\\icon_square_64", "Clique", numSkillLines + 2, function()
-            _G.Clique:ShowBindingConfig()
-
-            -- Hide the spellbook if its open
-            -- but don't try if we're in combat
-            if InCombatLockdown() then
-                return
+            if _G.Clique then
+                _G.Clique:ShowBindingConfig()
             end
         end)
     end
